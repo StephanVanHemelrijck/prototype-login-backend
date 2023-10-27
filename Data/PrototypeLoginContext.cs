@@ -19,7 +19,7 @@ public partial class PrototypeLoginContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder.UseMySql(
-                "Server=127.0.0.1;Port=3307;Database=prototype_login;User=root;Password=root;",
+                "Server=127.0.0.1;Port=3306;Database=prototype_login;User=root;Password=root;",
                 ServerVersion.Parse("11.3.0-mariadb")
             );
         }

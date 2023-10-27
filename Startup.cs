@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Pomelo.EntityFrameworkCore.MySql;
 using LoginApi.Data;
+using Microsoft.AspNetCore.Mvc;
+using LoginApi.Models;
 
 namespace LoginApi
 {
@@ -26,10 +28,22 @@ namespace LoginApi
             services.AddDbContext<PrototypeLoginContext>(
                 options =>
                     options.UseMySql(
-                        Configuration.GetConnectionString("MyDb"),
+                        "Server=127.0.0.1;Port=3306;Database=prototype_login;User=root;Password=root;",
                         ServerVersion.Parse("11.3.0-mariadb")
                     )
             );
+
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            });
+
+            services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new() { Title = "LoginApi", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,9 +57,16 @@ namespace LoginApi
 
             // Add any necessary middleware for your API, e.g., authentication and authorization.
 
-            app.UseEndpoints(endpoints =>
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseMvc();
+
+            // Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                endpoints.MapControllers();
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LoginApi v1");
             });
         }
     }
